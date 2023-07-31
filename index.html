@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+    <title>CIS Server</title>
+</head>
+<body class="bg-secondary text-light">
+    <div class="container-fluid">
+        <br />
+        <div class="card bg-dark border-0">
+            <div class="card-header">
+                CIS Server Network Activity
+            </div>
+            <div class="card-body">
+                <span id="feeds"> . .
+			    </span>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-outline-light" onclick="check()">Recheck</button>
+            </div>
+        </div>
+        <br/><br/>
+    </div>
+    <script>
+            function check() {
+                location.reload();              
+            }
+			function readJsonFile(path){
+				var rawFile = new XMLHttpRequest();
+				rawFile.open("GET", path, true);
+				rawFile.onreadystatechange = function (){
+					if(rawFile.readyState === 4){
+						if(rawFile.status === 200 || rawFile.status == 0){
+							var buffer = JSON.parse(rawFile.responseText);
+							generateResult(buffer);
+						}
+					}
+				}
+			rawFile.send(null);
+			}
+			function generateResult(result) {
+                console.log(result);
+				var str = "";
+				str = '<table class="table table-dark table-hover"><tr><th>Last Requested</th>';
+				str+="<td>"+result[0].date+"</td> <tr><th>Ip</th><td><small>"+result[0].ip+"</td></small></tr> <tr><th>User Agent</th><td>"+result[0].useragent+"</td></tr>";
+				str+='</table>';
+				document.getElementById("feeds").innerHTML = str;
+			}
+            readJsonFile("data/status.json");
+		</script>
+</body>
+</html>
